@@ -1,84 +1,73 @@
 import React, { Component } from 'react';
+import  './App.css';
 import friends from "./friends.json"
 import Header from "./components/Header";
 import FriendCard from "./components/FriendCard";
 
 
-
-// for the shuffle
-function randomFriends (friends) {
-  for (let i = friends.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [friends[i], friends[j]] = [friends[j], friends[i]];
-  }
-  return friends;
-};
 class App extends Component {
 
   state = {
    friends,
-   
     score: 0,
     topScore: 0,
-    // card1: 0,
-    // card2: 0,
-    // card3: 0,
-    // card4: 0,
-    // card5: 0,
-    // card6: 0,
-    // card7: 0,
-    // card8: 0,
-    // card9: 0,
-    // card10: 0,
-    // card11: 0,
-    // card12: 0,
+    message: "Click on the images to play, Don't click on an image twice!",
+    shakeit: "false",
     clickedCards:[]
   }
+  // componentDidMount() {
+  //   this.setState({ data: this.shufflefriend(this.state.data) });
+  // }
 
-
-  // cardClick = (id) => {
-  //   if (this.state.clickedCards.indexOf(id) === -1) {
-  //     this.cardIncrement();
-  //     this.setState({ clickedCards: this.state.clickedCards.concat(id) });
-  //   } else {
-  //     this.cardReset();
-  //   }
+  // resetData = data => {
+  //   const resetData = data.map(item => ({ ...item, clicked: false }));
+  //   return this.shufflefriend(resetData);
+    
   // };
-  // cardIncrement = () => {
-  //     this.setState({
-  //       score: this.state.score + 1,
-  //       topScore:  this.state.score + 1 > this.state.topScore ? this.state.score +1 : this.state.topScore,
-  //       friends: this.shuffle(friends),
-  
-  //     });
-  cardClick = (id) => {
-    let clickedCards = this.state.clickedCards
-    if (!clickedCards.includes(id)){
-      clickedCards.push(id)
-      console.log('clicked cards: ', clickedCards);
+// for the shuffle
+shufflefriend (friends){
 
-      this.setState({
-        score: this.state.score + 1,
-        topScore:  this.state.score + 1 > this.state.topScore ? this.state.score +1 : this.state.topScore,
-        friends: this.randomFriends(friends),
-  
-      });
-
-    } else if (clickedCards.includes(id)){
-      this.gameReset()
-      console.log('clicked cards: ', clickedCards);
-    } 
-
-    
+  for ( var i = friends.length - 1; i > 0; i--) {
+   var  j = Math.floor(Math.random() * (i + 1));
+    [friends[i], friends[j]] = [friends[j], friends[i]];
   }
-
-    
-    
-  
-  // Shuffle = () => {
+  return friends;
+}   // Shuffle = () => {
   //   let shuffledFriends = randomFriends(friends);
   //   this.setState({ friends: shuffledFriends });
   // };
+
+  cardClick = (id) => {
+    const shufflefriend = this.shufflefriend(friends);
+    this.setState({friends: shufflefriend});
+
+    if (this.state.clickedCards.includes(id)) {
+      this.setState({ score: 0, clickedCards: [], 
+        message: "Click an image to start again!", shakeit: "true"});
+    }
+    else {
+      this.setState({
+        clickedCards: this.state.clickedCards.concat([id]),
+        score: this.state.score + 1,
+        shakeit: "false"
+      });
+    }
+  
+    if (this.state.score > this.state.topScore) {
+      this.setState({ topScore: this.state.score });
+    }
+  
+  }
+  
+    
+  // gameover = () => {
+  //   if (this.state.score > this.state.topScore) {
+  //     this.setState({topscore: this.state.score}, function() {
+  //       console.log(this.state.topscore);
+  //     });
+  //   }
+  
+
 
 
  
@@ -89,6 +78,7 @@ class App extends Component {
       <Header 
         score={this.state.score} topScore={this.state.topScore} message={this.state.message}/>
         <div className="jumbotron pictureArea">
+          
           {this.state.friends.map(friend => (
             <FriendCard
               id={friend.id}
