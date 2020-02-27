@@ -1,3 +1,15 @@
+
+
+to run the app in localhoast 
+1. npm start 
+2. npm run build 
+3.  serve -s build
+
+
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
